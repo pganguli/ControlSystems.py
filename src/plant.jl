@@ -1,4 +1,4 @@
-using ControlSystems: ss
+using ControlSystemsBase: ss
 
 function spring_mass(m::Float64=1.0, k::Float64=1.0, b::Float64=0.2) # Mass-Spring-Damper System
     # m: mass (kg)
