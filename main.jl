@@ -1,4 +1,5 @@
-using ControlToolbox: rlc_circuit, c2d, lqr_controller, simulate, plot_sim, report_stats
+using ControlSystemsBase: c2d
+using ControlToolbox: rlc_circuit, lqr_controller, simulate, plot_sim, report_stats
 
 T = 200.0
 dt = 0.1
