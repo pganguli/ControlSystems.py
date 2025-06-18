@@ -1,30 +1,55 @@
-using ControlToolbox: rlc_circuit, lqr_controller, simulate, plot_sim, max_u, convergence_time, augment_matrix, deaugment_matrix
+using ControlToolbox: rlc_circuit, spring_mass, cruise_control, dc_motor, inv_pendulum, lqr_controller, simulate, plot_sim, augment_matrix, deaugment_matrix
 
 T = 200.0
 h = 0.1
 t = collect(0.0:h:T)
 
+# RLC Circuit
 sys = rlc_circuit()
 x0 = [50.0; 0.0]
 y_ref = 10.0
-
-sys_d, x0 = augment_matrix(sys, h, x0)
+sys_d, x0_aug = augment_matrix(sys, h, x0)
 K, F = lqr_controller(sys_d)
-println("K = ", K)
-println("F = ", F)
-x, u = simulate(sys_d, t, K, F, x0, y_ref)
+x, u = simulate(sys_d, t, K, F, x0_aug, y_ref)
 x = deaugment_matrix(x)
 plot_sim(sys_d, t, x, u)
 
-# Print statistics
-println("\n--- Simulation Statistics ---")
-conv_time = convergence_time(t, x, y_ref, sys)
-max_control = max_u(u)
+# Spring-Mass
+sys = spring_mass()
+x0 = [1.0; 0.0]
+y_ref = 0.5
+sys_d, x0_aug = augment_matrix(sys, h, x0)
+K, F = lqr_controller(sys_d)
+x, u = simulate(sys_d, t, K, F, x0_aug, y_ref)
+x = deaugment_matrix(x)
+plot_sim(sys_d, t, x, u)
 
-if conv_time > 0.0
-  println("Time to converge to reference: $(round(conv_time, digits=2)) s")
-else
-  println("Did not converge to reference.")
-end
+# Cruise Control
+sys = cruise_control()
+x0 = [0.0]
+y_ref = 20.0
+sys_d, x0_aug = augment_matrix(sys, h, x0)
+K, F = lqr_controller(sys_d)
+x, u = simulate(sys_d, t, K, F, x0_aug, y_ref)
+x = deaugment_matrix(x)
+plot_sim(sys_d, t, x, u)
 
-println("Maximum control input exerted: $(round(max_control, digits=3))")
+# DC Motor
+sys = dc_motor()
+x0 = [0.0; 0.0; 0.0]
+y_ref = 1.0
+sys_d, x0_aug = augment_matrix(sys, h, x0)
+K, F = lqr_controller(sys_d)
+x, u = simulate(sys_d, t, K, F, x0_aug, y_ref)
+x = deaugment_matrix(x)
+plot_sim(sys_d, t, x, u)
+
+# Inverted Pendulum
+sys = inv_pendulum()
+x0 = [0.0; 0.0; 0.1; 0.0]
+y_ref = 0.0
+sys_d, x0_aug = augment_matrix(sys, h, x0)
+K, F = lqr_controller(sys_d)
+x, u = simulate(sys_d, t, K, F, x0_aug, y_ref)
+x = deaugment_matrix(x)
+plot_sim(sys_d, t, x, u)
