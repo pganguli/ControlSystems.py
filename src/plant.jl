@@ -13,7 +13,7 @@ function spring_mass(m::Float64=1.0, k::Float64=1.0, b::Float64=0.2) # Mass-Spri
   # States:
   #   x (position)
   #   v (velocity)
-  return ss(A, B, C, D)
+  ss(A, B, C, D)
 end
 
 function rlc_circuit(R::Float64=10.0, L::Float64=100.0, C::Float64=0.01) # RLC Circuit
@@ -29,7 +29,7 @@ function rlc_circuit(R::Float64=10.0, L::Float64=100.0, C::Float64=0.01) # RLC C
   # States:
   #   q (charge)
   #   i (current)
-  return ss(A, B, C, D)
+  ss(A, B, C, D)
 end
 
 function cruise_control(m::Float64=1000.0, b::Float64=50.0) # Cruise Control
@@ -43,7 +43,7 @@ function cruise_control(m::Float64=1000.0, b::Float64=50.0) # Cruise Control
   # Output: v (velocity)
   # States:
   #   v (velocity)
-  return ss(A, B, C, D)
+  ss(A, B, C, D)
 end
 
 function dc_motor(J::Float64=3.2284e-6, b::Float64=3.5077e-6, Kb::Float64=0.0274, Kt::Float64=0.0274, R::Float64=4.0, L::Float64=2.75e-6) # DC Motor Position
@@ -63,7 +63,7 @@ function dc_motor(J::Float64=3.2284e-6, b::Float64=3.5077e-6, Kb::Float64=0.0274
   #   θ (angle)
   #   ω (angular velocity)
   #   i (current)
-  return ss(A, B, C, D)
+  ss(A, B, C, D)
 end
 
 function inv_pendulum(M::Float64=0.5, m::Float64=0.2, b::Float64=0.1, l::Float64=0.3, I::Float64=0.006, g::Float64=9.8) # Inverted Pendulum
@@ -92,5 +92,5 @@ function inv_pendulum(M::Float64=0.5, m::Float64=0.2, b::Float64=0.1, l::Float64
   #   v (velocity)
   #   φ (angle)
   #   ω (angular velocity)
-  return ss(A, B, C, D)
+  ss(A, B, C, D)
 end

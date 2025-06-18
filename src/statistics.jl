@@ -13,7 +13,7 @@ function report_stats(t::Vector{Float64}, x::Matrix{Float64}, u::Matrix{Float64}
     # Find the first index where the condition is true and stays true
     # This logic is adapted from the Python np.cumprod(within_tol[::-1])[::-1]
     converge_idx = -1
-    for i in 1:length(within_tol_flat)
+    for i in eachindex(within_tol_flat)
       if within_tol_flat[i]
         all_after_this_true = true
         for j in (i+1):length(within_tol_flat)

@@ -6,6 +6,9 @@ export spring_mass, rlc_circuit, cruise_control, dc_motor, inv_pendulum
 include("controller.jl")
 export lqr_controller
 
+include("statespace.jl")
+export augment_matrix, deaugment_matrix
+
 include("simulation.jl")
 export simulate
 

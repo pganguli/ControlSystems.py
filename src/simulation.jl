@@ -12,5 +12,6 @@ function simulate(sys::StateSpace, t::Vector{Float64}, K::Matrix{Float64}, F::Ve
     x[:, k] = sys.A * x[:, k-1] + sys.B * u[:, k-1]
     u[:, k] = -K * x[:, k] + F * y_ref
   end
-  return x, u
+
+  x, u
 end
