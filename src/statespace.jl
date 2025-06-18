@@ -1,4 +1,4 @@
-using ControlSystemsBase: StateSpace, c2d, delay
+using ControlSystemsBase: c2d, delay
 
 function augment_matrix(sys::StateSpace, h::Float64, x0::Vector{Float64})
   c2d(sys * delay(h), h), vcat(x0, 0.0)

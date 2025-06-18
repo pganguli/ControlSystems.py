@@ -1,4 +1,3 @@
-using ControlSystemsBase: StateSpace
 using Plots: plot, display
 
 function plot_sim(sys::StateSpace, t::Vector{Float64}, x::Matrix{Float64}, u::Matrix{Float64})

@@ -1,5 +1,4 @@
-using ControlSystemsBase: c2d
-using ControlToolbox: rlc_circuit, lqr_controller, simulate, plot_sim, report_stats, augment_matrix, deaugment_matrix
+using ControlToolbox: rlc_circuit, lqr_controller, simulate, plot_sim, max_u, convergence_time, augment_matrix, deaugment_matrix
 
 T = 200.0
 h = 0.1
@@ -16,4 +15,16 @@ println("F = ", F)
 x, u = simulate(sys_d, t, K, F, x0, y_ref)
 x = deaugment_matrix(x)
 plot_sim(sys_d, t, x, u)
-report_stats(t, x, u, y_ref, sys)
+
+# Print statistics
+println("\n--- Simulation Statistics ---")
+conv_time = convergence_time(t, x, y_ref, sys)
+max_control = max_u(u)
+
+if conv_time > 0.0
+  println("Time to converge to reference: $(round(conv_time, digits=2)) s")
+else
+  println("Did not converge to reference.")
+end
+
+println("Maximum control input exerted: $(round(max_control, digits=3))")

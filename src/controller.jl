@@ -1,5 +1,4 @@
-using ControlSystemsBase: StateSpace, lqr
-using LinearAlgebra: I
+using ControlSystemsBase: lqr
 
 function lqr_controller(sys::StateSpace)
   K = lqr(sys, I(sys.nx), I(sys.nu))
