@@ -19,6 +19,6 @@ function convergence_time(t::Vector{Float64}, x::Matrix{Float64}, y_ref::Matrix{
   if last_not_converged_col !== nothing && last_not_converged_col < length(t)
     return t[last_not_converged_col+1]
   else
-    return 0.0  # No convergence detected
+    return nothing  # No convergence detected
   end
 end
