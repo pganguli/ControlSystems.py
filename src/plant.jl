@@ -81,16 +81,44 @@ function inv_pendulum(M::Float64=0.5, m::Float64=0.2, b::Float64=0.1, l::Float64
     0.0 -(m * l * b)/p m*g*l*(M+m)/p 0.0
   ] # State matrix
   B = [0.0; (I + m * (l^2)) / p; 0.0; m * l / p] # Input matrix
-  C = [1.0 0.0 0.0 0.0; 0.0 0.0 1.0 0.0] # Output matrix
-  D = [0.0; 0.0] # Feedforward matrix
+  # TODO: Actually use C = [1.0 0.0 0.0 0.0; 0.0 0.0 1.0 0.0] # Output matrix
+  C = [1.0 0.0 0.0 0.0] # Output matrix
+  D = 0.0 # Feedforward matrix
   # Input: F (force)
   # Outputs:
   #   x (position)
-  #   φ (angle)
+  #   φ (angle) TODO:
   # States:
   #   x (position)
   #   v (velocity)
   #   φ (angle)
   #   ω (angular velocity)
+  ss(A, B, C, D)
+end
+
+function f1tenth_car(L::Float64=0.33, v::Float64=6.5) # F1/10 Car
+  # NOTE: It is assumed that small angle approximations
+  #       are applicable, i.e., sin(x) = tan(x) = x
+  # L: Wheelbase (m)
+  # v: Longitudinal velocity (m/s)
+  A = [
+    0.0 v; # v.sin(θ)
+    0.0 0.0
+  ] # State matrix
+  B = [
+    0.0;
+    (v / L) # (v / L).tan(δ)
+  ] # Input matrix
+  # TODO: Actually use C = [1.0 0.0; 0.0 1.0] # Output matrix
+  C = [1.0 0.0] # Output matrix
+  D = 0.0 # Feedforward matrix
+  # Inputs:
+  #   δ (steering angle)
+  # Outputs:
+  #   y (y-coordinate)
+  #   θ (heading angle) TODO:
+  # States:
+  #   y (y-coordinate)
+  #   θ (heading angle)
   ss(A, B, C, D)
 end

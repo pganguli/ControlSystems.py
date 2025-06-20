@@ -1,4 +1,4 @@
-function simulate(sys::StateSpace, t::Vector{Float64}, K::Matrix{Float64}, F::Vector{Float64}, x0::Vector{Float64}, y_ref::Float64)
+function simulate(sys::StateSpace, t::Vector{Float64}, K::Matrix{Float64}, F::Matrix{Float64}, x0::Vector{Float64}, y_ref::Matrix{Float64})
   H = length(t)
   x = zeros(sys.nx, H)
   u = zeros(sys.nu, H)

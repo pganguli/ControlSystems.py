@@ -4,7 +4,7 @@ using ControlSystemsBase: StateSpace
 using LinearAlgebra: I
 
 include("plant.jl")
-export spring_mass, rlc_circuit, cruise_control, dc_motor, inv_pendulum
+export spring_mass, rlc_circuit, cruise_control, dc_motor, inv_pendulum, f1tenth_car
 
 include("controller.jl")
 export lqr_controller
