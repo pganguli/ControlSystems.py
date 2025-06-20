@@ -28,21 +28,6 @@ y_ref_rlc = [10.0;;]
 sysd_rlc, x0_aug_rlc = augment_matrix(sys_rlc, h, x0_rlc)
 K_rlc, F_rlc = lqr_controller(sysd_rlc)
 
-# --- ControlTask Struct ---
-mutable struct ControlTask
-  name::String
-  priority::Int
-  sysd
-  K
-  F
-  x_hist::Matrix{Float64}
-  u_hist::Matrix{Float64}
-  y_ref::Matrix{Float64}
-  exec_mean::Float64
-  exec_std::Float64
-  exec_time::Float64
-end
-
 # --- Task List Initialization ---
 tasks = [
   ControlTask("f1tenth", 1, sysd_f1, K_f1, F_f1, zeros(sysd_f1.nx, H), zeros(sysd_f1.nu, H), y_ref_f1, 0.03, 0.01, 0.0),
@@ -70,47 +55,8 @@ for task in tasks
   task.u_hist[:, 1] .= 0.0
 end
 
-# --- Simulation Loop ---
-for k in 2:H
-  # 1. Draw execution times
-  for task in tasks
-    task.exec_time = max(0, randn() * task.exec_std + task.exec_mean)
-  end
-  # 2. Sort by priority
-  sorted_tasks = sort(tasks, by=t -> t.priority)
-  # 3. Schedule
-  total_time = 0.0
-  missed = String[]
-  for task in sorted_tasks
-    x_prev = task.x_hist[:, k-1]
-    u_prev = task.u_hist[:, k-1]
-    if total_time + task.exec_time <= h
-      # Update control input
-      u = -task.K * x_prev + task.F * task.y_ref
-      total_time += task.exec_time
-      println("[t=$(t[k])s] $(task.name) (exec_time=$(round(task.exec_time, digits=4))) [u=$(join(round.(u; digits=4), ", "))*]")
-    else
-      # Hold previous control input
-      u = u_prev
-      push!(missed, task.name)
-      println("[t=$(t[k])s] $(task.name) (exec_time=$(round(task.exec_time, digits=4))) [u=$(join(round.(u_prev; digits=4), ", "))]")
-    end
-    # Simulate one step
-    x = task.sysd.A * x_prev + task.sysd.B * u
-    task.x_hist[:, k] = x
-    task.u_hist[:, k] = u
-  end
-  if !isempty(missed)
-    println("[t=$(t[k])s] Missed tasks: ", join(missed, ", "))
-  end
-end
+# --- Simulation Loop (delegated) ---
+multitask_simulation!(tasks, t, h)
 
-# --- Plot and Print Results ---
-for task in tasks
-  x = deaugment_matrix(task.x_hist)
-  u = task.u_hist
-  println("\nResults for $(task.name):")
-  display(plot_sim(task.sysd, t, x, u))
-  println("Convergence time: ", convergence_time(t, x, task.y_ref, sys_map[task.name]))
-  println("Max control: ", max_u(u))
-end
+# --- Plot and Print Results (delegated) ---
+report_results(tasks, t, sys_map)
