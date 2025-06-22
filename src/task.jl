@@ -1,7 +1,8 @@
 mutable struct ControlTask
   name::String
-  priority::Int
+  priority::Float64
   sysd::StateSpace
+  sys_orig::StateSpace  # Original continuous system for priority calculation
   K::AbstractMatrix{Float64}
   F::AbstractMatrix{Float64}
   x_hist::Matrix{Float64}

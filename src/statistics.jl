@@ -1,4 +1,4 @@
-using Plots: display
+using Plots: display, savefig
 
 function max_u(u::Matrix{Float64})
   return maximum(abs.(u), init=0.0)
@@ -25,13 +25,19 @@ function convergence_time(t::Vector{Float64}, x::Matrix{Float64}, y_ref::Matrix{
   end
 end
 
-function report_results(tasks::Vector{ControlTask}, t::Vector{Float64}, sys_map::Dict{String, <:StateSpace})
+function report_results(tasks::Vector{ControlTask}, t::Vector{Float64})
   for task in tasks
     x = deaugment_matrix(task.x_hist)
     u = task.u_hist
     println("\nResults for $(task.name):")
-    display(plot_sim(task.sysd, t, x, u))
-    println("Convergence time: ", convergence_time(t, x, task.y_ref, sys_map[task.name]))
+    
+    # Create and save the plot
+    p = plot_sim(task.sysd, t, x, u)
+    filename = "$(task.name)_simulation.pdf"
+    savefig(p, filename)
+    println("Plot saved to: $filename")
+    
+    println("Convergence time: ", convergence_time(t, x, task.y_ref, task.sys_orig))
     println("Max control: ", max_u(u))
   end
 end
